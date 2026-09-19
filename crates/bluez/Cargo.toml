@@ -1,0 +1,22 @@
+[package]
+name = "bluez-zbus"
+version = "0.1.0"
+description = "dbus bindings for org.bluez with zbus"
+repository = "https://github.com/pop-os/dbus-settings-bindings"
+edition = "2024"
+license = "MPL-2.0"
+categories = ["os::linux-apis"]
+keywords = ["dbus", "bluez", "zbus", "bluetooth"]
+
+[dependencies]
+futures-channel = { workspace = true, features = ["sink"] }
+futures-util = {workspace = true, features = ["sink"] }
+tracing.workspace = true
+zbus.workspace = true
+
+[dev-dependencies]
+color-eyre = "0.6.5"
+eyre = "0.6.12"
+pico-args = "0.5.0"
+tokio = { version = "1", features = ["full"] }
+tracing-subscriber = "0.3.23"

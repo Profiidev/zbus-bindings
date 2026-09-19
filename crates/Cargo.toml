@@ -1,0 +1,29 @@
+[workspace]
+
+resolver = "3"
+
+members = [
+	"a11y",
+	"accounts-zbus",
+	"bluez",
+	"cosmic-settings-daemon",
+	"geoclue2",
+	"hostname1",
+	"locale1",
+	"mpris2",
+	"networkmanager",
+	"nm-secret-agent-manager",
+	"switcheroo-control",
+	"timedate",
+	"upower",
+]
+
+[workspace.dependencies]
+futures-channel = "0.3.32"
+futures-util = "0.3.32"
+serde = { version = "1.0", features = ["derive"] }
+thiserror = "2.0"
+jiff = "0.2"
+tracing = "0.1.44"
+zbus = { version = "5.14.0" }
+zvariant = { version = "5.10.0" }
