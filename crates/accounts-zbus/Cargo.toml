@@ -1,8 +1,11 @@
 [package]
-name = "accounts-zbus"
+name = "corona-zbus-accounts"
 version = "0.1.0"
 edition = "2024"
 license = "MPL-2.0"
+
+[lib]
+name = "accounts_zbus"
 
 [dependencies]
 zbus.workspace = true

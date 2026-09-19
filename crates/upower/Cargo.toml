@@ -1,5 +1,5 @@
 [package]
-name = "upower_dbus"
+name = "corona-zbus-upower"
 version = "0.3.2"
 authors = ["Michael Murphy <mmstick@pm.me>"]
 repository = "https://github.com/pop-os/dbus-settings-bindings"
@@ -9,6 +9,9 @@ license = "MIT"
 categories = ["os::unix-apis"]
 keywords = ["linux", "systemd", "logind", "dbus", "zbus"]
 edition = "2024"
+
+[lib]
+name = "upower_dbus"
 
 [dependencies]
 serde.workspace = true

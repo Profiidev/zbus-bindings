@@ -1,9 +1,12 @@
 [package]
-name = "switcheroo-control"
+name = "corona-zbus-switcheroo-control"
 version = "0.1.0"
 edition = "2024"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[lib]
+name = "switcheroo_control"
 
 [dependencies]
 zbus.workspace = true

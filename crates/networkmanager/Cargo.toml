@@ -1,8 +1,11 @@
 [package]
-name = "cosmic-dbus-networkmanager"
+name = "corona-zbus-networkmanager"
 version = "0.1.0"
 edition = "2024"
 license = "MPL-2.0"
+
+[lib]
+name = "cosmic_dbus_networkmanager"
 
 [dependencies]
 bitflags = "2.11"

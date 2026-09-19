@@ -1,7 +1,10 @@
 [package]
-name = "cosmic-dbus-a11y"
+name = "corona-zbus-a11y"
 version = "0.1.0"
 edition = "2024"
+
+[lib]
+name = "cosmic_dbus_a11y"
 
 [dependencies]
 zbus.workspace = true

@@ -1,7 +1,10 @@
 [package]
-name = "locale1"
+name = "corona-zbus-locale1"
 version = "0.1.0"
 edition = "2024"
+
+[lib]
+name = "locale1"
 
 [dependencies]
 zbus.workspace = true

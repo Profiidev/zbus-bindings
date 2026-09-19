@@ -1,5 +1,5 @@
 [package]
-name = "timedate-zbus"
+name = "corona-zbus-timedate"
 version = "0.1.0"
 description = "a dbus client (using zbus) for timedate"
 repository = "https://github.com/pop-os/dbus-settings-bindings"
@@ -10,6 +10,9 @@ keywords = ["systemd", "timedate", "zbus"]
 
 [package.metadata.docs.rs]
 all-features = true
+
+[lib]
+name = "timedate_zbus"
 
 [dependencies]
 zbus.workspace = true
