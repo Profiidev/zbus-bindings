@@ -1,6 +1,8 @@
 [package]
 name = "corona-zbus-networkmanager"
 version = "0.1.0"
+repository = "https://github.com/pop-os/dbus-settings-bindings"
+description = "dbus bindings for org.freedesktop.NetworkManager with zbus"
 edition = "2024"
 license = "MPL-2.0"
 

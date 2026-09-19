@@ -1,6 +1,8 @@
 [package]
 name = "corona-zbus-accounts"
 version = "0.1.0"
+repository = "https://github.com/pop-os/dbus-settings-bindings"
+description = "dbus bindings for org.freedesktop.Accounts with zbus"
 edition = "2024"
 license = "MPL-2.0"
 
