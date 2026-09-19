@@ -1,5 +1,7 @@
 #!/usr/bin/env node
-// Change published package names only; code keeps compiling via [lib] name = <old ident>.
+// One-shot: rename published packages, keep the code compiling via [lib] name = <old ident>.
+// Re-run after a `git subtree pull` if upstream ever touches a [package] name.
+// Versions are owned by release-plz in each Cargo.toml, not by this script.
 // Usage: node rename-crates.js [cratesDir] [--write]
 const fs = require("fs"),
   path = require("path");
@@ -33,13 +35,16 @@ for (const e of fs.readdirSync(root, { withFileTypes: true })) {
   if (!m || !MAP[m[1]]) continue;
 
   const oldName = m[1],
+    newName = MAP[oldName],
     libName = oldName.replace(/-/g, "_");
-  let out = src.replace(m[0], `name = "${MAP[oldName]}"`);
+
+  let out = src.replace(m[0], `name = "${newName}"`);
+
   if (!/^\[lib\]/m.test(out))
     out = out.replace(/^\[dependencies\]/m, `[lib]\nname = "${libName}"\n\n[dependencies]`);
 
   console.log(
-    `${write ? "wrote" : "would write"} ${file}: ${oldName} -> ${MAP[oldName]} (lib ${libName})`,
+    `${write ? "wrote" : "would write"} ${file}: ${oldName} -> ${newName} (lib ${libName})`,
   );
   if (write) fs.writeFileSync(file, out);
 }

@@ -1,4 +1,4 @@
-name: Module Update
+name: Upstream Update
 
 on:
   workflow_dispatch:
@@ -6,7 +6,7 @@ on:
     - cron: "0 0 * * 1" # Every Monday at midnight UTC
 
 jobs:
-  update-modules:
+  update-upstream:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3
@@ -17,20 +17,29 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
-          submodules: recursive
+          fetch-depth: 0
 
-      - name: Update modules
+      # -X ours keeps our [package] name and version when upstream's bumps
+      # conflict; upstream code changes still apply
+      - name: Pull upstream
         run: |
-          git submodule update --remote --force crates
+          git config user.name "profidev-commit-bot[bot]"
+          git config user.email "profidev-commit-bot[bot]@users.noreply.github.com"
+          git subtree pull --prefix=crates \
+            https://github.com/pop-os/dbus-settings-bindings main \
+            -X ours -m "chore: pull upstream"
+
+      - name: Re-apply crate names
+        run: node scripts/rename-crates.js crates --write
 
       - name: Create PR
         uses: peter-evans/create-pull-request@5f6978faf089d4d20b00c7766989d076bb2fc7f1 # v8
         with:
           token: ${{ steps.app-token.outputs.token }}
-          commit-message: "chore: updated submodules"
-          branch: "chore/update-submodules-${{ github.run_id }}"
-          title: "chore: update submodules"
-          body: "This PR updates the crates submodules to their latest versions."
+          commit-message: "chore: update upstream"
+          branch: "chore/update-upstream-${{ github.run_id }}"
+          title: "chore: update upstream"
+          body: "This PR pulls the latest upstream changes into `crates/`."
           base: main
           sign-commits: true
-          labels: submodules-update
+          labels: upstream-update
