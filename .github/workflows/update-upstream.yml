@@ -19,15 +19,15 @@ jobs:
         with:
           fetch-depth: 0
 
-      # -X ours keeps our [package] name and version when upstream's bumps
-      # conflict; upstream code changes still apply
+      # `git subtree pull` takes no -X, so do what it does by hand: fetch, then
+      # a subtree merge. -X ours keeps our [package] name and version when
+      # upstream's bumps conflict; upstream code changes still apply.
       - name: Pull upstream
         run: |
           git config user.name "profidev-commit-bot[bot]"
           git config user.email "profidev-commit-bot[bot]@users.noreply.github.com"
-          git subtree pull --prefix=crates \
-            https://github.com/pop-os/dbus-settings-bindings main \
-            -X ours -m "chore: pull upstream"
+          git fetch https://github.com/pop-os/dbus-settings-bindings main
+          git merge -X ours -X subtree=crates FETCH_HEAD -m "chore: pull upstream"
 
       # an unmapped crate only warns; the PR still opens and the auto-merge
       # guard refuses to merge it
@@ -43,5 +43,8 @@ jobs:
           title: "chore: update upstream"
           body: "This PR pulls the latest upstream changes into `crates/`."
           base: main
-          sign-commits: true
+          # sign-commits replays each commit through the API with a single
+          # parent, which flattens the subtree merge and re-applies upstream's
+          # root-relative paths at the repo root; push the real commits instead
+          sign-commits: false
           labels: upstream-update
