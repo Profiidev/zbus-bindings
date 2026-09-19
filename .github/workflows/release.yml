@@ -12,6 +12,10 @@ jobs:
     permissions:
       id-token: write
     environment: release
+    # set the CARGO_REGISTRY_TOKEN secret to publish a brand new crate:
+    # crates.io trusted publishing (OIDC) only works once a crate exists
+    env:
+      MANUAL_CRATES_TOKEN: ${{ secrets.CARGO_REGISTRY_TOKEN }}
     steps:
       - uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3
         id: app-token
@@ -32,6 +36,10 @@ jobs:
         with:
           cache-on-failure: true
           shared-key: "release"
+
+      - name: Use manual crates.io token when set
+        if: env.MANUAL_CRATES_TOKEN != ''
+        run: echo "CARGO_REGISTRY_TOKEN=$MANUAL_CRATES_TOKEN" >> "$GITHUB_ENV"
 
       - name: Run release-plz
         uses: MarcoIeni/release-plz-action@2eb1d8bcb770b4c48ccfaad919734b38b51958c9 # v0.5

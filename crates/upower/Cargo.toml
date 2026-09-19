@@ -1,6 +1,6 @@
 [package]
 name = "corona-zbus-upower"
-version = "0.3.2"
+version = "0.1.0"
 authors = ["Michael Murphy <mmstick@pm.me>"]
 repository = "https://github.com/pop-os/dbus-settings-bindings"
 description = "a dbus client (using zbus) for upower"
