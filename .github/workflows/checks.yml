@@ -1,0 +1,17 @@
+name: Checks and Validation
+on:
+  pull_request:
+
+jobs:
+  linters:
+    name: Run linters
+    runs-on: ubuntu-latest
+    permissions:
+      checks: write
+      contents: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      - name: Run cargo check
+        run: |
+          cd crates
+          RUSTFLAGS="-D warnings" cargo check --all-features
