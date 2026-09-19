@@ -14,6 +14,8 @@ jobs:
         with:
           cache-on-failure: true
           shared-key: "checks"
+          workspaces: |
+            crates -> target
       - name: Run cargo check
         run: |
           cd crates

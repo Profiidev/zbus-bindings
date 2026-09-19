@@ -36,6 +36,8 @@ jobs:
         with:
           cache-on-failure: true
           shared-key: "release"
+          workspaces: |
+            crates -> target
 
       - name: Use manual crates.io token when set
         if: env.MANUAL_CRATES_TOKEN != ''
