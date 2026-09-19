@@ -20,14 +20,49 @@ jobs:
           fetch-depth: 0
 
       # `git subtree pull` takes no -X, so do what it does by hand: fetch, then
-      # a subtree merge. -X ours keeps our [package] name and version when
-      # upstream's bumps conflict; upstream code changes still apply.
+      # a subtree merge. Conflicts are committed as-is (markers and all) and
+      # reported; the PR then carries a different label so auto-merge skips it.
       - name: Pull upstream
+        id: merge
         run: |
           git config user.name "profidev-commit-bot[bot]"
           git config user.email "profidev-commit-bot[bot]@users.noreply.github.com"
           git fetch https://github.com/pop-os/dbus-settings-bindings main
-          git merge -X ours -X subtree=crates FETCH_HEAD -m "chore: pull upstream"
+          git merge --no-edit -X subtree=crates FETCH_HEAD -m "chore: pull upstream" || true
+
+          # our [package] name and version always beat upstream's; release-plz
+          # owns them. ponytail: takes ours for the whole file, so an upstream
+          # dependency change in a conflicting Cargo.toml is dropped — narrow it
+          # if that ever bites.
+          for f in $(git diff --name-only --diff-filter=U -- 'crates/*/Cargo.toml'); do
+            git checkout --ours -- "$f" && git add -- "$f" || true
+          done
+
+          conflicts=$(git diff --name-only --diff-filter=U)
+          if [ -n "$conflicts" ]; then
+            echo "::warning::conflicts: $(printf '%s' "$conflicts" | tr '\n' ' ')"
+            git add -A
+          fi
+          # a clean merge already committed itself; a conflicted one has not
+          if git rev-parse -q --verify MERGE_HEAD >/dev/null; then
+            git commit --no-edit
+          fi
+
+          # printf, not echo: echo on an empty list emits a newline, tr turns it
+          # into " ", and a single space is truthy in a GitHub expression
+          echo "conflicts=$(printf '%s' "$conflicts" | tr '\n' ' ')" >> "$GITHUB_OUTPUT"
+          {
+            echo "note<<GHEOF"
+            if [ -n "$conflicts" ]; then
+              echo "Conflicts are committed as-is. A modify/delete conflict leaves no"
+              echo "markers, only our version of the file."
+              echo
+              printf '%s\n' "$conflicts" | sed 's|^|- `|; s|$|`|'
+              echo
+              echo "Resolve them on this branch, then add the \`upstream-update\` label to auto-merge."
+            fi
+            echo "GHEOF"
+          } >> "$GITHUB_OUTPUT"
 
       # an unmapped crate only warns; the PR still opens and the auto-merge
       # guard refuses to merge it
@@ -41,10 +76,13 @@ jobs:
           commit-message: "chore: update upstream"
           branch: "chore/update-upstream-${{ github.run_id }}"
           title: "chore: update upstream"
-          body: "This PR pulls the latest upstream changes into `crates/`."
+          body: |
+            This PR pulls the latest upstream changes into `crates/`.
+
+            ${{ steps.merge.outputs.note }}
           base: main
           # sign-commits replays each commit through the API with a single
           # parent, which flattens the subtree merge and re-applies upstream's
           # root-relative paths at the repo root; push the real commits instead
           sign-commits: false
-          labels: upstream-update
+          labels: ${{ steps.merge.outputs.conflicts && 'upstream-conflict' || 'upstream-update' }}
