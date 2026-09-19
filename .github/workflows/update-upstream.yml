@@ -29,6 +29,8 @@ jobs:
             https://github.com/pop-os/dbus-settings-bindings main \
             -X ours -m "chore: pull upstream"
 
+      # an unmapped crate only warns; the PR still opens and the auto-merge
+      # guard refuses to merge it
       - name: Re-apply crate names
         run: node scripts/rename-crates.js crates --write
 

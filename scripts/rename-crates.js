@@ -10,7 +10,7 @@ const MAP = {
   "cosmic-dbus-a11y": "corona-zbus-a11y",
   "accounts-zbus": "corona-zbus-accounts",
   "bluez-zbus": "corona-zbus-bluez",
-  "cosmic-settings-daemon": "cosmic-settings-daemon",
+  "cosmic-settings-daemon": "cosmic-settings-daemon", // not published, see release-plz.toml
   geoclue2: "corona-zbus-geoclue2",
   "hostname1-zbus": "corona-zbus-hostname1",
   locale1: "corona-zbus-locale1",
@@ -22,8 +22,13 @@ const MAP = {
   upower_dbus: "corona-zbus-upower",
 };
 
+// crates upstream added that nobody has mapped yet: named so they are obvious
+// on sight, and so the auto-merge guard can refuse the PR
+const UNMAPPED_PREFIX = "corona-zbus-unmapped-";
+
 const root = process.argv[2] && !process.argv[2].startsWith("--") ? process.argv[2] : "crates";
 const write = process.argv.includes("--write");
+const unmapped = [];
 
 for (const e of fs.readdirSync(root, { withFileTypes: true })) {
   if (!e.isDirectory()) continue;
@@ -32,11 +37,23 @@ for (const e of fs.readdirSync(root, { withFileTypes: true })) {
 
   const src = fs.readFileSync(file, "utf8");
   const m = src.match(/^name\s*=\s*"([^"]+)"/m);
-  if (!m || !MAP[m[1]]) continue;
+  if (!m) continue;
 
   const oldName = m[1],
-    newName = MAP[oldName],
     libName = oldName.replace(/-/g, "_");
+
+  // already renamed by an earlier run
+  if (oldName.startsWith(UNMAPPED_PREFIX)) {
+    unmapped.push(`${e.name} (${oldName})`);
+    continue;
+  }
+  if (Object.values(MAP).includes(oldName)) continue;
+
+  const newName = MAP[oldName] ?? UNMAPPED_PREFIX + e.name;
+  if (!MAP[oldName]) {
+    unmapped.push(`${e.name} (${oldName})`);
+    console.log(`  !! no mapping for "${oldName}", using placeholder`);
+  }
 
   let out = src.replace(m[0], `name = "${newName}"`);
 
@@ -49,3 +66,9 @@ for (const e of fs.readdirSync(root, { withFileTypes: true })) {
   if (write) fs.writeFileSync(file, out);
 }
 console.log(write ? "done" : "dry run; pass --write to apply");
+
+// not an error: the PR still opens, the auto-merge guard refuses to merge it
+if (unmapped.length) {
+  console.warn(`\n${unmapped.length} unmapped crate(s): ${unmapped.join(", ")}`);
+  console.warn("add them to MAP in scripts/rename-crates.js before releasing");
+}

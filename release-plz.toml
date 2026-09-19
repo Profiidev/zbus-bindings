@@ -24,3 +24,9 @@ publish_allow_dirty = false
 semver_check = true
 
 release_always = false
+
+# not ours to publish: kept in the workspace so the rest of the crates build,
+# never versioned, tagged or pushed to crates.io
+[[package]]
+name = "cosmic-settings-daemon"
+release = false

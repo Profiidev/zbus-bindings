@@ -17,6 +17,14 @@ jobs:
           private-key: ${{ secrets.COMMIT_BOT_PRIVATE_KEY }}
       - name: Checkout code
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      # scripts/rename-crates.js names unmapped crates corona-zbus-unmapped-*
+      - name: Refuse unmapped crates
+        run: |
+          if grep -rln 'name = "corona-zbus-unmapped-' crates/*/Cargo.toml; then
+            echo "::error::unmapped crate(s) above; add them to MAP in scripts/rename-crates.js"
+            exit 1
+          fi
+
       - name: Enable auto-merge for PR
         run: gh pr merge ${{ github.event.pull_request.number }} --auto --squash
         env:
