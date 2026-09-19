@@ -16,6 +16,8 @@ jobs:
           private-key: ${{ secrets.COMMIT_BOT_PRIVATE_KEY }}
       - name: Checkout code
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          submodules: recursive
 
       - name: Update modules
         run: |
