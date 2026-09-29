@@ -7,6 +7,7 @@ members = [
 	"accounts-zbus",
 	"bluez",
 	"cosmic-settings-daemon",
+	"freedesktop-icons",
 	"geoclue2",
 	"hostname1",
 	"locale1",

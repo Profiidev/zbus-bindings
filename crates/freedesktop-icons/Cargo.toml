@@ -1,5 +1,5 @@
 [package]
-name = "cosmic-freedesktop-icons"
+name = "corona-freedesktop-icons"
 version = "0.4.0"
 edition = "2024"
 
@@ -8,6 +8,9 @@ description = "A Freedesktop Icons lookup crate"
 repository = "https://github.com/pop-os/freedesktop-icons"
 readme = "README.md"
 keywords = ["icons", "gui", "freedesktop"]
+
+[lib]
+name = "cosmic_freedesktop_icons"
 
 [dependencies]
 bstr = "1.12.1"

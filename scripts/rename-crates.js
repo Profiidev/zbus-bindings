@@ -11,6 +11,7 @@ const MAP = {
   "accounts-zbus": "corona-zbus-accounts",
   "bluez-zbus": "corona-zbus-bluez",
   "cosmic-settings-daemon": "cosmic-settings-daemon", // not published, see release-plz.toml
+  "cosmic-freedesktop-icons": "corona-freedesktop-icons",
   geoclue2: "corona-zbus-geoclue2",
   "hostname1-zbus": "corona-zbus-hostname1",
   locale1: "corona-zbus-locale1",
