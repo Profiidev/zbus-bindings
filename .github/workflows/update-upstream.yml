@@ -27,26 +27,38 @@ jobs:
         run: |
           git config user.name "profidev-commit-bot[bot]"
           git config user.email "profidev-commit-bot[bot]@users.noreply.github.com"
-          git fetch https://github.com/pop-os/dbus-settings-bindings main
-          git merge --no-edit -X subtree=crates FETCH_HEAD -m "chore: pull upstream" || true
+          conflicts=""
+          # "<repo> <prefix>" per subtree; the nested prefix has its own
+          # entry, dbus-settings-bindings never touches crates/freedesktop-icons
+          while read -r repo prefix; do
+            git fetch "https://github.com/pop-os/$repo" main
+            git merge --no-edit -X subtree="$prefix" FETCH_HEAD -m "chore: pull upstream $repo" || true
 
-          # our [package] name and version always beat upstream's; release-plz
-          # owns them. ponytail: takes ours for the whole file, so an upstream
-          # dependency change in a conflicting Cargo.toml is dropped — narrow it
-          # if that ever bites.
-          for f in $(git diff --name-only --diff-filter=U -- 'crates/*/Cargo.toml'); do
-            git checkout --ours -- "$f" && git add -- "$f" || true
-          done
+            # upstream's Cargo.toml wins so its dependency changes land; our
+            # version (owned by release-plz) is put back here, our package name
+            # by rename-crates.js in the next step
+            for f in $(git diff --name-only --diff-filter=U -- 'crates/*/Cargo.toml'); do
+              v=$(git show ":2:$f" | grep -m1 '^version *=') &&
+                git checkout --theirs -- "$f" &&
+                sed -i "0,/^version *=.*/s//$v/" "$f" &&
+                git add -- "$f" || true
+            done
 
-          conflicts=$(git diff --name-only --diff-filter=U)
-          if [ -n "$conflicts" ]; then
-            echo "::warning::conflicts: $(printf '%s' "$conflicts" | tr '\n' ' ')"
-            git add -A
-          fi
-          # a clean merge already committed itself; a conflicted one has not
-          if git rev-parse -q --verify MERGE_HEAD >/dev/null; then
-            git commit --no-edit
-          fi
+            c=$(git diff --name-only --diff-filter=U)
+            if [ -n "$c" ]; then
+              echo "::warning::$repo conflicts: $(printf '%s' "$c" | tr '\n' ' ')"
+              git add -A
+              conflicts="$conflicts$c"$'\n'
+            fi
+            # a clean merge already committed itself; a conflicted one has not
+            if git rev-parse -q --verify MERGE_HEAD >/dev/null; then
+              git commit --no-edit
+            fi
+          done <<'EOF'
+          dbus-settings-bindings crates
+          freedesktop-icons crates/freedesktop-icons
+          EOF
+          conflicts=${conflicts%$'\n'}
 
           # printf, not echo: echo on an empty list emits a newline, tr turns it
           # into " ", and a single space is truthy in a GitHub expression
@@ -77,7 +89,7 @@ jobs:
           branch: "chore/update-upstream-${{ github.run_id }}"
           title: "chore: update upstream"
           body: |
-            This PR pulls the latest upstream changes into `crates/`.
+            This PR pulls the latest upstream changes of dbus-settings-bindings and freedesktop-icons into `crates/`.
 
             ${{ steps.merge.outputs.note }}
           base: main
