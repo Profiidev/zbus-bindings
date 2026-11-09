@@ -1,5 +1,5 @@
 [package]
-name = "switcheroo-control-zbus"
+name = "corona-zbus-unmapped-switcheroo-control"
 version = "0.1.0"
 repository = "https://github.com/pop-os/dbus-settings-bindings"
 description = "dbus bindings for net.hadess.SwitcherooControl with zbus"
@@ -7,6 +7,9 @@ edition = "2024"
 license = "MPL-2.0"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[lib]
+name = "switcheroo_control_zbus"
 
 [dependencies]
 zbus.workspace = true

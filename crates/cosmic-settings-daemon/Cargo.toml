@@ -1,5 +1,5 @@
 [package]
-name = "cosmic-settings-daemon-zbus"
+name = "corona-zbus-unmapped-cosmic-settings-daemon"
 version = "1.0.0"
 repository = "https://github.com/pop-os/dbus-settings-bindings"
 description = "dbus bindings for com.system76.CosmicSettingsDaemon"
