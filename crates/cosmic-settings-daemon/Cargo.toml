@@ -5,6 +5,7 @@ repository = "https://github.com/pop-os/dbus-settings-bindings"
 description = "dbus bindings for com.system76.CosmicSettingsDaemon"
 license = "MPL-2.0"
 edition = "2024"
+publish = false
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
