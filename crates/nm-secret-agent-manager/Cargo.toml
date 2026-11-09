@@ -1,10 +1,9 @@
 [package]
 name = "corona-zbus-nm-secret-agent-manager"
+description = "Use nmrs instead"
 version = "0.1.0"
-repository = "https://github.com/pop-os/dbus-settings-bindings"
-description = "dbus bindings for org.freedesktop.NetworkManager.AgentManager with zbus"
-license = "MPL-2.0"
 edition = "2024"
+publish = false
 
 [lib]
 name = "nm_secret_agent_manager"

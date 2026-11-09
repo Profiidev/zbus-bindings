@@ -1,0 +1,22 @@
+[package]
+name = "corona-zbus-unmapped-login1"
+version = "1.0.0"
+description = "A dbus client (using zbus) for logind"
+repository = "https://github.com/pop-os/dbus-settings-bindings"
+readme = "README.md"
+edition = "2024"
+# Fork of logind-zbus (https://gitlab.com/flukejones/logind-zbus)
+license = "MPL-2.0"
+authors = ["Luke D Jones <luke@ljones.dev>"]
+categories = ["os::unix-apis"]
+keywords = ["systemd", "logind", "zbus"]
+
+[lib]
+name = "cosmic_login1_zbus"
+
+[dependencies]
+serde.workspace = true
+zbus.workspace = true
+
+[dev-dependencies]
+futures-lite = "2.5.0"

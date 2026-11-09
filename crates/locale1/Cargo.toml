@@ -1,13 +1,13 @@
 [package]
-name = "corona-zbus-locale1"
+name = "corona-zbus-unmapped-locale1"
 version = "0.1.0"
 repository = "https://github.com/pop-os/dbus-settings-bindings"
 description = "dbus bindings for org.freedesktop.locale1 with zbus"
-license = "MPL-2.0"
 edition = "2024"
+license = "MPL-2.0"
 
 [lib]
-name = "locale1"
+name = "locale1_zbus"
 
 [dependencies]
 zbus.workspace = true

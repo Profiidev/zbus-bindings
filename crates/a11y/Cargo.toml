@@ -1,13 +1,13 @@
 [package]
-name = "corona-zbus-a11y"
+name = "corona-zbus-unmapped-a11y"
 version = "0.1.0"
 repository = "https://github.com/pop-os/dbus-settings-bindings"
 description = "dbus bindings for org.a11y with zbus"
-license = "MPL-2.0"
 edition = "2024"
+license = "MPL-2.0"
 
 [lib]
-name = "cosmic_dbus_a11y"
+name = "a11y_zbus"
 
 [dependencies]
 zbus.workspace = true
