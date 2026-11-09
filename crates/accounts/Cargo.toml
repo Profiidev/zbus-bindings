@@ -1,6 +1,6 @@
 [package]
 name = "corona-zbus-accounts"
-version = "0.1.0"
+version = "0.2.0"
 repository = "https://github.com/pop-os/dbus-settings-bindings"
 description = "dbus bindings for org.freedesktop.Acccounts with zbus"
 edition = "2024"
