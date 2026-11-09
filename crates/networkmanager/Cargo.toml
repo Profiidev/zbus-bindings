@@ -1,18 +1,14 @@
 [package]
-name = "corona-zbus-networkmanager"
+name = "cosmic-dbus-networkmanager"
+description = "Use nmrs instead"
 version = "0.1.0"
-repository = "https://github.com/pop-os/dbus-settings-bindings"
-description = "dbus bindings for org.freedesktop.NetworkManager with zbus"
 edition = "2024"
 license = "MPL-2.0"
-
-[lib]
-name = "cosmic_dbus_networkmanager"
+publish = false
 
 [dependencies]
-bitflags = "2.11"
+bitflags = "2.13"
 derive_builder = "0.20.2"
 procfs = { version = "0.18", default-features = false }
 jiff.workspace = true
-zvariant.workspace = true
 zbus.workspace = true

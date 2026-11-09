@@ -1,13 +1,10 @@
 [package]
-name = "corona-zbus-accounts"
+name = "accounts-zbus"
 version = "0.1.0"
 repository = "https://github.com/pop-os/dbus-settings-bindings"
-description = "dbus bindings for org.freedesktop.Accounts with zbus"
+description = "dbus bindings for org.freedesktop.Acccounts with zbus"
 edition = "2024"
 license = "MPL-2.0"
-
-[lib]
-name = "accounts_zbus"
 
 [dependencies]
 zbus.workspace = true
